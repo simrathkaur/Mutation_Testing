@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createTask } from '../services/taskService';
+import './TaskForm.css';
 
 const TaskForm = ({ addTask }) => {
   const [taskData, setTaskData] = useState({
@@ -9,64 +9,47 @@ const TaskForm = ({ addTask }) => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTaskData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { checked } = e.target;
-    setTaskData((prev) => ({ ...prev, completed: checked }));
+    setTaskData({
+      ...taskData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newTask = await createTask(taskData);
-      addTask(newTask); // Update task list in parent component
-      setTaskData({ title: '', description: '', completed: false });
+      await addTask(taskData);
+      setTaskData({
+        title: '',
+        description: '',
+        completed: false,
+      });
     } catch (error) {
-      console.error('Error creating task:', error);
+      console.error('Error submitting task:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-      <h2>Add a New Task</h2>
-      <div>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            value={taskData.title}
-            onChange={handleChange}
-            required
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Description:
-          <textarea
-            name="description"
-            value={taskData.description}
-            onChange={handleChange}
-            required
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Completed:
-          <input
-            type="checkbox"
-            name="completed"
-            checked={taskData.completed}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-      </div>
-      <button type="submit">Add Task</button>
+    <form className="task-form" onSubmit={handleSubmit}>
+      <h2>Add Task</h2>
+      <input
+        type="text"
+        name="title"
+        value={taskData.title}
+        onChange={handleChange}
+        placeholder="Task Title"
+        className="task-input"
+      />
+      <textarea
+        name="description"
+        value={taskData.description}
+        onChange={handleChange}
+        placeholder="Task Description"
+        className="task-input"
+      ></textarea>
+      <button type="submit" className="submit-btn">
+        Add Task
+      </button>
     </form>
   );
 };

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
-import { getTasks, createTask, deleteTaskById } from './services/taskService';
+import { getTasks, createTask, deleteTaskById, updateTaskById } from './services/taskService';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch tasks from the backend when the app loads
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
@@ -28,7 +27,6 @@ function App() {
     fetchTasks();
   }, []);
 
-  // Add a new task by calling the API and updating the state
   const addTask = async (task) => {
     setError(null);
     try {
@@ -40,7 +38,6 @@ function App() {
     }
   };
 
-  // Delete a task by calling the API and updating the state
   const deleteTask = async (taskId) => {
     setError(null);
     try {
@@ -52,16 +49,33 @@ function App() {
     }
   };
 
+  const toggleTaskStatus = async (taskId, currentStatus) => {
+    setError(null);
+    try {
+      const updatedTask = await updateTaskById(taskId, { completed: !currentStatus });
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+      );
+    } catch (err) {
+      setError('Failed to update task. Please try again.');
+      console.error(err);
+    }
+  };
+
   return (
     <div className="App">
-      <h1>Task Manager</h1>
-      {error && <div className="error">{error}</div>}
-      <TaskForm addTask={addTask} />
-      {loading ? (
-        <p>Loading tasks...</p>
-      ) : (
-        <TaskList tasks={tasks} deleteTask={deleteTask} />
-      )}
+      <header className="app-header">
+        <h1>Task Manager</h1>
+      </header>
+      <main className="app-container">
+        {error && <div className="error-message">{error}</div>}
+        <TaskForm addTask={addTask} />
+        {loading ? (
+          <p className="loading-message">Loading tasks...</p>
+        ) : (
+          <TaskList tasks={tasks} deleteTask={deleteTask} toggleTaskStatus={toggleTaskStatus} />
+        )}
+      </main>
     </div>
   );
 }
