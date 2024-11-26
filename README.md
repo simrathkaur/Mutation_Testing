@@ -7,15 +7,16 @@ The complete code repository can be found at: https://github.com/simrathkaur/Mut
 
 # Test Case Strategy used
 
-Mutation Testing
+* Mutation Testing
+* Unit Testing
 
 # Testing Tools used
- PIT mutation testing for Java: https://pitest.org/
- JUnit: Available from http://junit.org/junit5/.
- API testing with Postman: https://www.postman.com/api-platform/
+* PIT mutation testing for Java: https://pitest.org/
+* JUnit: Available from http://junit.org/junit5/.
+* API testing with Postman: https://www.postman.com/api-platform/
 api-testing/
 
 
 # Screenshots
-Application Screenshots available at snapshots/ApplicationScreenshots
-Test Result Screenshots available at snapshots/TestScreenshots
+* Application Screenshots available at snapshots/ApplicationScreenshots
+* Test Result Screenshots available at snapshots/TestScreenshots
